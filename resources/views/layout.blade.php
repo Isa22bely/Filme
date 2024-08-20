@@ -4,43 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Agenda</title>
+    <title>@yield('title')</title>
     @vite(['resources/js/app.js'])
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
-    @component('navbar')
-    @endcomponent
-    <main role="main" class="flex-shrink-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-
-                </div>
-                <div class="col-md-10">
-                    @hasSection('content')
-                        @yield('content')
-                    @endif
-                </div>
-            </div>
+    <div class="container">
+        @component('navbar')
+        @endcomponent
+        <main role="main" class="py-4">
+            @hasSection('content')
+                @yield('content')
+            @endif
+        </main>
+    </div>
+    <div class="container">
+        <div class="card-footer">
+            <p class="text-center py-4">Todos os direitos reservados a &copy;Copyright</p>
         </div>
-    </main>
-    
-    <footer class="footer mt-auto py-3 navbar-fixed-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-
-                </div>
-                <div class="col-md-10">
-                    <p class="text-center"><span class="text-muted">Todos os direitos reservados a &copy;Copyright</span></p>
-                </div>
-            </div>
-          
-        </div>
-    </footer>
-    @hasSection ('javascript')
-        @yield('javascript')
-    @endif
+    </div>
 </body>
 </html>
