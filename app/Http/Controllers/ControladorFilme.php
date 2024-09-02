@@ -11,6 +11,7 @@ use App\Models\Roteirista;
 use App\Models\FichaTecnicaDiretor;
 use App\Models\FichaTecnicaRoteiristra;
 use App\Models\FichaTecnicaAtor;
+use Illuminate\Support\Facades\BD;
 
 
 class ControladorFilme extends Controller
@@ -25,9 +26,9 @@ class ControladorFilme extends Controller
 
     public function index()
     {
-        $dados = FichaTecnica::with('claisificacao_indicativa')->get();    
+        $dados = FichaTecnica::with('claisificacao_indicativa')->with('comentario')->get();    
      
-        return view('exibeLivros', compact('dados'));
+        return view('exibeFilmes', compact('dados'));
        
   
     }
@@ -38,7 +39,7 @@ class ControladorFilme extends Controller
     public function create()
     {
         $clasificacao_indicativa = Clasificacao_indicativa::all();
-        return view('novoLivro', compact('clasificacao_indicativa'));
+        return view('novoFilme', compact('clasificacao_indicativa', 'comentario'));
     }
     
 
@@ -56,6 +57,7 @@ class ControladorFilme extends Controller
         $dados->Pais= $request->input('pais');
         $dados->Sinopse= $request->input('sinopse');
         $dados->clasificacao_indicativa_id = $request->input('claisificacao_indicativa');
+        $dados->comentario_id = $request->input('comentario');
         if($dados->save())
             return redirect('/Filme')->with('success', 'Filme cadastrado com sucesso!!');
         return redirect('/Filme')->with('danger', 'Erro ao cadastrar o Filme!');
@@ -78,7 +80,8 @@ class ControladorFilme extends Controller
         $dados = Filme::find($id);
         if(isset($dados)){
             $claisificacao_indicativa = Claisificacao_indicativa::all();
-            return view('editarFilme', compact('dados', 'claisificacao_indicativa'));
+            $comentario = Comentario::all();
+            return view('editarFilme', compact('dados', 'claisificacao_indicativa', 'comentario'));
         }
     }
 
@@ -98,7 +101,7 @@ class ControladorFilme extends Controller
             $dados->Sinopse= $request->input('sinopse');
             $dados->clasificacao_indicativa_id = $request->input('claisificacao_indicativa');
             $dados->save();
-            return redirect('/Filme')->with('success', 'Fime atualizado com sucesso!!');
+            return redirect('/Filme')->with('success', 'Filme atualizado com sucesso!!');
         }else{
             return redirect('/Filme')->with('danger', 'Cadastro do filme não localizado!!');
         
@@ -127,16 +130,41 @@ class ControladorFilme extends Controller
     }
 
 
-    public function novoFilme($id){
-        $dados = DB::table('Diretor')->orderBy('Nome')->get();
+    public function novoDiretor($id){
+        $dados = DB::table('diretor')->orderBy('Nome')->get();
         if(isset($dados)){
-            $livro = Filme::find($id);
+            $filmes = Filme::find($id);
             $dados->Titulo = $filme->Titulo;
             $dados->filme_id = $id;
-            return view('novoAutorLivro', compact('dados'));
+            return view('novoFilmeDiretor', compact('dados'));
         }
         return redirect('/filme')->with('danger', 'Não há diretores cadastrados!!');
     }
+
+
+    public function novoRoteirista($id){
+        $dados = DB::table('roteiristas')->orderBy('Nome')->get();
+        if(isset($dados)){
+            $filmes = Filme::find($id);
+            $dados->Titulo = $filme->Titulo;
+            $dados->filme_id = $id;
+            return view('novoFilmeRoteirista', compact('dados'));
+        }
+        return redirect('/filme')->with('danger', 'Não há roteiristas cadastrados!!');
+    }
+
+
+    public function novoAtor($id){
+        $dados = DB::table('ators')->orderBy('Nome')->get();
+        if(isset($dados)){
+            $filmes = Filme::find($id);
+            $dados->Titulo = $filme->Titulo;
+            $dados->filme_id = $id;
+            return view('novoFilmeAtor', compact('dados'));
+        }
+        return redirect('/filme')->with('danger', 'Não há atores cadastrados!!');
+    }
+
         
 }
 
